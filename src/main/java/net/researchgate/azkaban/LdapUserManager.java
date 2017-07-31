@@ -126,8 +126,13 @@ public class LdapUserManager implements UserManager {
             throw new UserManagerException("Cursor error", e);
         }
         finally {
-            if (result != null)
-                result.close();
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (IOException e) {
+                    throw new UserManagerException("IO error", e);
+                }
+            }
 
             if (connection != null) {
                 try {
@@ -258,8 +263,13 @@ public class LdapUserManager implements UserManager {
         } catch (CursorException e) {
             return false;
         } finally {
-            if (result != null)
-                result.close();
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (IOException e) {
+                    return false;
+                }
+            }
 
             if (connection != null) {
                 try {
